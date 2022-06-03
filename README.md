@@ -46,7 +46,7 @@ Start time: 630pm
 
 Finish time: 830pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 2 hrs
 
 
 
@@ -54,19 +54,19 @@ Name of feature: Card 2 Storage
 
 Estimate of time needed to complete: 2hrs
 
-Start time: 
+Start time:7pm
 
-Finish time: 
+Finish time:11pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 4 hrs
 
 
 
 Name of feature: Card 3 Book Component
 Estimate of time needed to complete: 2hrs
 
-Start time: 
+Start time: 830pm 
 
-Finish time: 
-
-Actual time needed to complete: _____
+Finish time: 11:10pm
+(was watching lecture so took a bit longer)
+Actual time needed to complete: 3.5 hrs.
