@@ -27,7 +27,7 @@ componentDidMount = async () => {
     this.setState({
       books: response.data
     })
-  }catch(error){
+  } catch (error) {
     console.error('Error in BestBooks componentDidMount: ', error);
     this.setState({
       errorMessage: `Status Code: ${error.response.status}: ${error.response.data}`
