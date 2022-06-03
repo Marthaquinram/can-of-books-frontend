@@ -1,0 +1,28 @@
+#carousel {
+  max-height: 700px;
+  margin: 3%;
+}
+
+#carousel-image {
+   max-height: 770px;
+  
+}
+#carousel-text-box{
+  background-color: lightblue;
+  opacity: .80;
+  padding: 5%;
+  margin-bottom: 20%;
+  border: 2px;
+}
+
+.carousel-text {
+  color: black;
+}
+
+#title{
+  text-align: center;
+}
+
+#no-books{
+  text-align: center;
+}
