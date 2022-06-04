@@ -21,7 +21,7 @@ componentDidMount = async () => {
     const config = {
       method: 'get',
       baseURL: process.env.REACT_APP_SERVER,
-      url: '/books'
+      url: './books'
     }
     const response = await axios(config);
     this.setState({
