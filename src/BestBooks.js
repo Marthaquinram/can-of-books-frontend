@@ -3,8 +3,11 @@ import  Carousel  from 'react-bootstrap/Carousel';
 import  Image  from 'react-bootstrap/Image';
 import bookImg from './lib.jpeg';
 import axios from 'axios';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 
+const SERVER = process.env.REACT_APP_SERVER;
+
+const API_URL = `${SERVER}/books`;
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -14,7 +17,19 @@ class BestBooks extends React.Component {
     }
   }
 
-  /* TODO: Make a GET request to your API to fetch all the books from the database  */
+  handleOpenModal = (addedBook) => {
+    
+    this.setState({ showModal: true});
+  };
+
+  handleBookCreate = async (bookinfo) => {
+    const response = await axios.post(API_URL, bookinfo); //arguement goes here
+    const newBook = response.data;
+    this.setState({
+      books: [...this.state.books, newBook]
+    })
+  }
+
 componentDidMount = async () => {
   try{
 
@@ -35,8 +50,6 @@ componentDidMount = async () => {
   }
 }
   render() {
-
-    /* TODO: render all the books in a Carousel */
 
     return (
       <>
@@ -64,7 +77,10 @@ componentDidMount = async () => {
           ) : ( // if NOT then give me "no books found"
           <h3 id="no-books">No Books Found :(</h3>
           )}
-          </Container>
+          <Button variant="primary" onClick={() => this.props.handleOpenModal}>
+          Add Book
+        </Button>
+        </Container>
       </>
     )
   }

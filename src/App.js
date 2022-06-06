@@ -3,6 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About';
+// import CreateBook from './CreateBook';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -10,8 +11,23 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+// import axios from 'axios';
+
+// const SERVER = process.env.REACT_APP_SERVER;
+
+// const API_URL = `${SERVER}/books`;
+
 
 class App extends React.Component {
+
+  // handleBookCreate = async (bookinfo) => {
+  //   const response = await axios.post(API_URL, bookinfo); //arguement goes here
+  //   const newBook = response.data;
+  //   this.setState({
+  //     books: [...this.state.books, newBook]
+  //   })
+  // }
+
   render() {
     return (
       <>
@@ -23,11 +39,14 @@ class App extends React.Component {
               element={<BestBooks />}
             >
             </Route>
-            {/* PLACEHOLDER: add a route with a path of '/about' that renders the `About` component */}
             <Route 
               path="/about"
               element={<About />}
             >
+            </Route>
+            <Route>
+              {/* <CreateBook onCreate={this.handleBookCreate} /> */}
+
             </Route>
           </Routes>
           <Footer />
