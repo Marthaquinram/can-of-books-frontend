@@ -4,7 +4,7 @@ import Image from 'react-bootstrap/Image';
 import bookImg from './lib.jpeg';
 import axios from 'axios';
 import BookFormModal from './BookFormModal.js';
-import { Container, Button, Accordion } from 'react-bootstrap';
+import { Container, Button} from 'react-bootstrap';
 
 const SERVER = process.env.REACT_APP_SERVER;
 
@@ -72,6 +72,35 @@ class BestBooks extends React.Component {
     }
   };
 
+  deleteBook = async (bookToBeDeleted) => {
+    try {
+      const proceed = window.confirm(`Do you want to delete ${bookToBeDeleted.title}?`);
+
+
+      let newBookArr = this.state.books.filter((book) => book._id !== bookToBeDeleted._id);
+      this.setState({
+        books: newBookArr,
+        errorMessage: ''
+      });
+
+      if (proceed) {
+        const config = {
+          method: 'DELETE',
+          baseURL: process.env.REACT_APP_SERVER,
+          url: `/books/${bookToBeDeleted._id}`
+        };
+        await axios(config);
+
+      }
+    } catch (error) {
+      console.error('error in BestBook deleteBook: ', error);
+      this.setState({
+        errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`
+      });
+    }
+  };
+
+
   closeError = () => this.setState({ errorMessage: '' });
 
   closeFormModal = () => this.setState({ showModal: false });
@@ -81,14 +110,11 @@ class BestBooks extends React.Component {
     return (
       <>
         <h2 id="title">My Essential Lifelong Learning &amp; Formation Shelf</h2>
-        <Button variant="primary" onClick={() => this.setState({ showModal: true })}>
-          Add Book
-        </Button>
         {this.state.showModal &&
           <BookFormModal
             showModal={this.state.showModal}
-            closeFormModal={this.closeFormModal} 
-            createBook={this.createBook}/>
+            closeFormModal={this.closeFormModal}
+            createBook={this.createBook} />
         }
         <Container>
 
@@ -106,6 +132,10 @@ class BestBooks extends React.Component {
                     <h2 className="carousel-text">{book.title}</h2>
                     <p className="carousel-text">{book.description}</p>
                     <p className="carousel-text">Status: {book.status}</p>
+                    <Button id="delete" onClick={() => { this.deleteBook(book) }}>Delete</Button>
+                    <Button variant="primary" onClick={() => this.setState({ showModal: true })}>
+                      Add Book
+                    </Button>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
