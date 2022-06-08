@@ -6,16 +6,17 @@ import axios from 'axios';
 import BookFormModal from './BookFormModal.js';
 import { Container, Button} from 'react-bootstrap';
 
-const SERVER = process.env.REACT_APP_SERVER;
+// const SERVER = process.env.REACT_APP_SERVER;
 
-const API_URL = `${SERVER}/books`;
+// const API_URL = `${SERVER}/books`;
 
 class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       books: [],
-      showModal: false
+      showModal: false,
+      bookToBeUpdated: null
     }
   }
 
@@ -99,11 +100,41 @@ class BestBooks extends React.Component {
       });
     }
   };
+updateBook = async (updatedBook) => {
+    try {
+        const config = {
+          method: 'PUT',
+          baseURL: process.env.REACT_APP_SERVER,
+          url: `/books/${updatedBook._id}`,
+          data: updatedBook
+        };
+        const updatedBookResult = await axios(config);
+        
+      let updateBooks = this.state.books.map(book => {
+        if (book._id === updatedBookResult.data._id) {
+          return updatedBookResult;
+        } else {
+          return book;
+        }
+      });
+      
+      this.setState({
+        books: updateBooks,
+        errorMessage: ''
+      });
 
+    } catch (error) {
+      console.error('error in BestBook updateBook: ', error);
+      this.setState({
+        errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`
+      });
+    }
+  };
 
   closeError = () => this.setState({ errorMessage: '' });
 
   closeFormModal = () => this.setState({ showModal: false });
+  selectBookToUpdate = (bookToBeUpdated) => this.setState({ bookToBeUpdated, showModel: true });
 
   render() {
 
@@ -112,9 +143,11 @@ class BestBooks extends React.Component {
         <h2 id="title">My Essential Lifelong Learning &amp; Formation Shelf</h2>
         {this.state.showModal &&
           <BookFormModal
-            showModal={this.state.showModal}
-            closeFormModal={this.closeFormModal}
-            createBook={this.createBook} />
+          showModal={this.state.showModal}
+          closeFormModal={this.closeFormModal}
+          createBook={this.createBook}
+          bookToBeUpdated={this.state.bookToBeUpdated}
+          updateBook={this.updateBook} />
         }
         <Container>
 
@@ -133,6 +166,7 @@ class BestBooks extends React.Component {
                     <p className="carousel-text">{book.description}</p>
                     <p className="carousel-text">Status: {book.status}</p>
                     <Button id="delete" onClick={() => { this.deleteBook(book) }}>Delete</Button>
+                    <Button onClick={() => { this.selectBookToUpdate(book) }}> Update</Button>
                     <Button variant="primary" onClick={() => this.setState({ showModal: true })}>
                       Add Book
                     </Button>
