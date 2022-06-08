@@ -10,6 +10,7 @@ export default class CreateBook extends Component {
       status: event.target.formStatus.value,
     });
   };
+  
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
