@@ -84,7 +84,6 @@ Finish time: 830pm
 Actual time needed to complete: 2 hrs
 
 
-
 Name of feature: Card 2 Storage
 
 Estimate of time needed to complete: 2hrs
@@ -96,11 +95,10 @@ Finish time:11pm
 Actual time needed to complete: 4 hrs
 
 
-
 Name of feature: Card 3 Book Component
 Estimate of time needed to complete: 2hrs
 
-Start time: 3:30pm 
+Start time: 3:30pm
 
 Finish time: 5:30pm
 (was watching lecture so took a bit longer)
@@ -111,7 +109,7 @@ Name of feature: Lab 12 Card 1 Add Book
 
 Estimate of time needed to complete: 2 hrs
 
-Start time: 5:41pm 
+Start time: 5:41pm
 
 Finish time: 12:03am
 
@@ -119,12 +117,11 @@ Finish time: 12:03am
 Actual time needed to complete: 6 hrs and 20 mins.
 
 
-
 Name of feature: Lab 12 Card 2 Delete
 
 Estimate of time needed to complete: 2 hrs
 
-Start time: 4:00pm 
+Start time: 4:00pm
 
 Finish time: 9:30pm
 (this includes time to be in class from 6:30pm - 8:30pm)
