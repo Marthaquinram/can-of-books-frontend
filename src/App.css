@@ -4,14 +4,14 @@
 }
 
 #carousel-image {
-   max-height: 770px;
+max-height: 770px;
   
 }
 #carousel-text-box{
   background-color: lightblue;
   opacity: .80;
   padding: 5%;
-  margin-bottom: 20%;
+  margin-bottom: 12%;
   border: 2px;
 }
 
@@ -25,4 +25,26 @@
 
 #no-books{
   text-align: center;
+}
+.photos{
+  float: left;
+  margin-right: 20px;
+}
+#footer{
+  margin-top: 5%;
+}
+
+#marthacolor{
+  background-color: teal;
+  color: white;
+}
+
+#natalijacolor {
+   background-color: rgb(138, 247, 210);
+   color: rgb(0, 4, 128);
+ }
+
+ #vidacolor{
+  background-color: #2B2D2F;
+  color: lightgray;
 }
