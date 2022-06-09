@@ -5,7 +5,10 @@ import bookImg from './lib.jpeg';
 import axios from 'axios';
 import BookFormModal from './BookFormModal.js';
 import { Container, Button} from 'react-bootstrap';
-
+import Login from './Login';
+import Logout from './Logout';
+import Profile from './Profile';
+import { withAuth0 } from "@auth0/auth0-react";
 // const SERVER = process.env.REACT_APP_SERVER;
 
 // const API_URL = `${SERVER}/books`;
@@ -136,10 +139,11 @@ updateBook = async (updatedBook) => {
   closeFormModal = () => this.setState({ showModal: false });
   selectBookToUpdate = (bookToBeUpdated) => this.setState({ bookToBeUpdated, showModal: true });
 
-  render() {
 
-    return (
-      <>
+      render() {
+        
+        return (
+          <>
         <h2 id="title">My Essential Lifelong Learning &amp; Formation Shelf</h2>
         {this.state.showModal &&
           <BookFormModal
@@ -151,6 +155,13 @@ updateBook = async (updatedBook) => {
         }
         <Container>
 
+        {this.props.auth0.isAuthenticated ?
+    <>
+      <Logout />
+      <Profile />
+      
+     
+
           {this.state.books.length ? ( // this is saying IF this.state.books exist, if its more than 0 then give me the carousel.
             <Carousel id="carousel">
               {this.state.books.map(book => (
@@ -159,8 +170,8 @@ updateBook = async (updatedBook) => {
                     className="w-100"
                     src={bookImg}
                     alt={book.title}
-
-                  />
+                    
+                    />
                   <Carousel.Caption id="carousel-text-box">
                     <h2 className="carousel-text">{book.title}</h2>
                     <p className="carousel-text">{book.description}</p>
@@ -177,12 +188,14 @@ updateBook = async (updatedBook) => {
               ))}
             </Carousel>
           ) : ( // if NOT then give me "no books found"
-            <h3 id="no-books">No Books Found :(</h3>
+          <h3 id="no-books">No Books Found :(</h3>
           )}
+          </>
+           : <Login /> }
         </Container>
       </>
     )
   }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
