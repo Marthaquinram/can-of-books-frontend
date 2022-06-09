@@ -26,7 +26,7 @@ class BookFormModal extends React.Component {
       status: this.state.status
     };
 
-    if (this.status.method === 'PUT') {
+    if (this.state.method === 'PUT') {
       this.props.updateBook(book);
     } else {
       this.props.createBook(book); 

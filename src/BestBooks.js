@@ -112,7 +112,7 @@ updateBook = async (updatedBook) => {
         
       let updateBooks = this.state.books.map(book => {
         if (book._id === updatedBookResult.data._id) {
-          return updatedBookResult;
+          return updatedBookResult.data;
         } else {
           return book;
         }
@@ -134,7 +134,7 @@ updateBook = async (updatedBook) => {
   closeError = () => this.setState({ errorMessage: '' });
 
   closeFormModal = () => this.setState({ showModal: false });
-  selectBookToUpdate = (bookToBeUpdated) => this.setState({ bookToBeUpdated, showModel: true });
+  selectBookToUpdate = (bookToBeUpdated) => this.setState({ bookToBeUpdated, showModal: true });
 
   render() {
 
@@ -165,9 +165,11 @@ updateBook = async (updatedBook) => {
                     <h2 className="carousel-text">{book.title}</h2>
                     <p className="carousel-text">{book.description}</p>
                     <p className="carousel-text">Status: {book.status}</p>
-                    <Button id="delete" onClick={() => { this.deleteBook(book) }}>Delete</Button>
-                    <Button onClick={() => { this.selectBookToUpdate(book) }}> Update</Button>
-                    <Button variant="primary" onClick={() => this.setState({ showModal: true })}>
+                    <Button id="delete" onClick={() => { this.deleteBook(book) }}>
+                      Delete</Button>
+                    <Button onClick={() => { this.selectBookToUpdate(book) }}> 
+                    Update</Button>
+                    <Button variant="primary" onClick={() => this.setState({ showModal: true, bookToBeUpdated: null})}>
                       Add Book
                     </Button>
                   </Carousel.Caption>
