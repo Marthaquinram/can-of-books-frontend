@@ -3,6 +3,9 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About';
+import Welcome from './Welcome';
+import Profile from './auth/Profile';
+import { withAuth0 } from "@auth0/auth0-react";
 // import CreateBook from './CreateBook';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -39,12 +42,18 @@ class App extends React.Component {
           <Routes>
             <Route 
               exact path="/"
-              element={<BestBooks />}
+              element={this.props.auth0.isAuthenticated? <BestBooks /> : <Welcome />}
             >
+              
             </Route>
             <Route 
               path="/about"
               element={<About />}
+            >
+            </Route>
+             <Route 
+              path="/profile"
+              element={<Profile />}
             >
             </Route>
             <Route>
@@ -59,4 +68,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuth0(App);
