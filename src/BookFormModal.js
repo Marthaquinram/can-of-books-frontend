@@ -35,7 +35,6 @@ class BookFormModal extends React.Component {
   };
 
 
-
   render() {
     return (
       <Modal show={this.props.showModal} onHide={this.props.closeFormModal}>
