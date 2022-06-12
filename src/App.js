@@ -11,7 +11,8 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-
+import {withAuth0} from "@auth0/auth0-react";
+import Welcome from './Welcome';
 
 
 // import axios from 'axios';
@@ -39,7 +40,8 @@ class App extends React.Component {
           <Routes>
             <Route 
               exact path="/"
-              element={<BestBooks />}
+              // 03:07 - Conditionally render the `BestBooks` component, if the user is logged in. Otherwise, show the `Welcome` component.
+              element={this.props.auth0.isAuthenticated ? <BestBooks /> : <Welcome />}
             >
             </Route>
             <Route 
@@ -59,4 +61,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuth0(App);

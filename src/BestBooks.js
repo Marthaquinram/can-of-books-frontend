@@ -9,6 +9,7 @@ import Login from './Login';
 import Logout from './Logout';
 import Profile from './Profile';
 import { withAuth0 } from "@auth0/auth0-react";
+
 // const SERVER = process.env.REACT_APP_SERVER;
 
 // const API_URL = `${SERVER}/books`;
@@ -33,17 +34,27 @@ class BestBooks extends React.Component {
 
   componentDidMount = async () => {
     try {
+      // new for lab 15
+      if (this.props.auth0.isAuthenticated) {
+        const res = await this.props.auth0.getIdTokenClaims();
+        const jwt = res.__raw;
 
-      const config = {
-        method: 'get',
-        baseURL: process.env.REACT_APP_SERVER,
-        url: '/books'
+        // leave this console here in order to grab your token for backend testing in Thunder Client
+        console.log('token: ', jwt);
+
+        const config = {
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
+          method: 'get',
+          baseURL: process.env.REACT_APP_SERVER,
+          url: '/books'
+        }
+
+        const response = await axios(config);
+        this.setState({
+          books: response.data
+        })
       }
-      const response = await axios(config);
-      this.setState({
-        books: response.data
-      })
-    } catch (error) {
+} catch (error) {
       console.error('Error in BestBooks componentDidMount: ', error);
       this.setState({
         errorMessage: `Status Code: ${error.response.status}: ${error.response.data}`
@@ -53,22 +64,30 @@ class BestBooks extends React.Component {
 
   createBook = async (newBook) => {
     try {
-      const config = {
-        method: "POST",
-        baseURL: process.env.REACT_APP_SERVER,
-        url: "/books/",
-        data: newBook
-      };
+      if (this.props.auth0.isAuthenticated) {
+        const res = await this.props.auth0.getIdTokenClaims();
+        const jwt = res.__raw;
 
-      const response = await axios(config);
+        // leave this console here in order to grab your token for backend testing in Thunder Client
+        console.log('token: ', jwt);
+        const config = {
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
+          method: "POST",
+          baseURL: process.env.REACT_APP_SERVER,
+          url: "/books/",
+          data: newBook
+        };
 
-      const newBookArr = [...this.state.books, response.data];
-      this.setState({
-        books: newBookArr,
-        errorMessage: ''
-      });
+        const response = await axios(config);
 
-    } catch (error) {
+        const newBookArr = [...this.state.books, response.data];
+        this.setState({
+          books: newBookArr,
+          errorMessage: ''
+        });
+
+      }
+} catch (error) {
       console.error("error in BestBook createBook: ", error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`,
@@ -87,8 +106,14 @@ class BestBooks extends React.Component {
         errorMessage: ''
       });
 
-      if (proceed) {
+      if (proceed && this.props.auth0.isAuthenticated) {
+          const res = await this.props.auth0.getIdTokenClaims();
+          const jwt = res.__raw;
+
+          // leave this console here in order to grab your token for backend testing in Thunder Client
+          console.log('token: ', jwt);
         const config = {
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
           method: 'DELETE',
           baseURL: process.env.REACT_APP_SERVER,
           url: `/books/${bookToBeDeleted._id}`
@@ -103,9 +128,17 @@ class BestBooks extends React.Component {
       });
     }
   };
-updateBook = async (updatedBook) => {
+
+  updateBook = async (updatedBook) => {
     try {
+      if (this.props.auth0.isAuthenticated) {
+        const res = await this.props.auth0.getIdTokenClaims();
+        const jwt = res.__raw;
+
+        // leave this console here in order to grab your token for backend testing in Thunder Client
+        console.log('token: ', jwt);
         const config = {
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
           method: 'PUT',
           baseURL: process.env.REACT_APP_SERVER,
           url: `/books/${updatedBook._id}`,
@@ -113,20 +146,21 @@ updateBook = async (updatedBook) => {
         };
         const updatedBookResult = await axios(config);
         
-      let updateBooks = this.state.books.map(book => {
-        if (book._id === updatedBookResult.data._id) {
-          return updatedBookResult.data;
-        } else {
-          return book;
-        }
-      });
+        let updateBooks = this.state.books.map(book => {
+          if (book._id === updatedBookResult.data._id) {
+            return updatedBookResult.data;
+          } else {
+            return book;
+          }
+        });
       
-      this.setState({
-        books: updateBooks,
-        errorMessage: ''
-      });
+        this.setState({
+          books: updateBooks,
+          errorMessage: ''
+        });
 
-    } catch (error) {
+      }
+} catch (error) {
       console.error('error in BestBook updateBook: ', error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Navbar, NavItem } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { withAuth0 } from '@auth0/auth0-react';
+import Logout from "./auth/Logout";
 
 class Header extends React.Component {
   render() {
@@ -11,10 +13,12 @@ class Header extends React.Component {
         <NavItem><Link to="/about" className="nav-link">About</Link></NavItem>
         <NavItem>
         </NavItem>
-        {/* PLACEHOLDER: render a navigation link to the about page */}
+        {this.props.auth0.isAuthenticated &&
+          <>
+          <Logout /></>}
       </Navbar>
     )
   }
 }
 
-export default Header;
+export default withAuth0(Header);
