@@ -19,6 +19,7 @@ class BestBooks extends React.Component {
 
   componentDidMount = async () => {
     try {
+
             if (this.props.auth0.isAuthenticated) {
               const res = await this.props.auth0.getIdTokenClaims();
               const jwt = res.__raw;
@@ -41,6 +42,7 @@ class BestBooks extends React.Component {
         console.error('Error in BestBooks componentDidMount: ', error);
         this.setState({
           errorMessage: `Status Code: ${error.response.status}: ${error.response.data}`
+
       })
     }
   }
@@ -50,6 +52,7 @@ class BestBooks extends React.Component {
       if (this.props.auth0.isAuthenticated) {
         const res = await this.props.auth0.getIdTokenClaims();
         const jwt = res.__raw;
+
 
         console.log('token: ', jwt);
 
@@ -61,16 +64,27 @@ class BestBooks extends React.Component {
         data: newBook
       };
 
-      const response = await axios(config);
+        // leave this console here in order to grab your token for backend testing in Thunder Client
+        console.log('token: ', jwt);
+        const config = {
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
+          method: "POST",
+          baseURL: process.env.REACT_APP_SERVER,
+          url: "/books/",
+          data: newBook
+        };
 
-      const newBookArr = [...this.state.books, response.data];
-      this.setState({
-        books: newBookArr,
-        errorMessage: ''
-      });
+        const response = await axios(config);
 
-    } 
-  } catch (error) {
+        const newBookArr = [...this.state.books, response.data];
+        this.setState({
+          books: newBookArr,
+          errorMessage: ''
+        });
+
+      }
+} catch (error) {
+
       console.error("error in BestBook createBook: ", error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`,
@@ -88,10 +102,25 @@ class BestBooks extends React.Component {
 
         console.log('token: ', jwt);
 
-        const bookToBeDeleted = await BookFormModal.findOne({_id: Request.params._id, email:requestAnimationFrame.User.email});
-        
+// lab15vida added to 118
+      let newBookArr = this.state.books.filter((book) => book._id !== bookToBeDeleted._id);
+      this.setState({
+        books: newBookArr,
+        errorMessage: ''
+      });
+
+      if (proceed && this.props.auth0.isAuthenticated) {
+          const res = await this.props.auth0.getIdTokenClaims();
+          const jwt = res.__raw;
+
+          // leave this console here in order to grab your token for backend testing in Thunder Client
+          console.log('token: ', jwt);
         const config = {
-          headers: { "Authorization": `Bearer ${jwt}` },
+          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
+
+   const bookToBeDeleted = await BookFormModal.findOne({_id: Request.params._id, email:requestAnimationFrame.User.email});
+        
+
           method: 'DELETE',
           baseURL: process.env.REACT_APP_SERVER,
           url: `/books/${bookToBeDeleted._id}`
@@ -150,6 +179,7 @@ class BestBooks extends React.Component {
 
         }
       } catch (error) {
+
       console.error('error in BestBook updateBook: ', error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`

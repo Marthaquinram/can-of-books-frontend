@@ -14,7 +14,8 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-
+import {withAuth0} from "@auth0/auth0-react";
+import Welcome from './Welcome';
 
 
 // import axios from 'axios';
@@ -42,6 +43,7 @@ class App extends React.Component {
           <Routes>
             <Route 
               exact path="/"
+
               element={this.props.auth0.isAuthenticated? <BestBooks /> : <Welcome />}
             >
               
