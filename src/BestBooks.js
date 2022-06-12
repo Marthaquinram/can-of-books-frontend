@@ -5,14 +5,7 @@ import bookImg from './lib.jpeg';
 import axios from 'axios';
 import BookFormModal from './BookFormModal.js';
 import { Container, Button} from 'react-bootstrap';
-import Login from './Login';
-import Logout from './Logout';
-import Profile from './Profile';
 import { withAuth0 } from "@auth0/auth0-react";
-
-// const SERVER = process.env.REACT_APP_SERVER;
-
-// const API_URL = `${SERVER}/books`;
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -22,42 +15,34 @@ class BestBooks extends React.Component {
       showModal: false,
       bookToBeUpdated: null
     }
-  }
-
-  // handleBookCreate = async (bookinfo) => {
-  //   const response = await axios.post(API_URL, bookinfo); 
-  //   const newBook = response.data;
-  //   this.setState({
-  //     books: 
-  //   })
-  // }
+  }    
 
   componentDidMount = async () => {
     try {
-      // new for lab 15
-      if (this.props.auth0.isAuthenticated) {
-        const res = await this.props.auth0.getIdTokenClaims();
-        const jwt = res.__raw;
 
-        // leave this console here in order to grab your token for backend testing in Thunder Client
-        console.log('token: ', jwt);
+            if (this.props.auth0.isAuthenticated) {
+              const res = await this.props.auth0.getIdTokenClaims();
+              const jwt = res.__raw;
+    
+                //         // leave this console here in order to grab your token for backend testing in Thunder Client
+              console.log('token: ', jwt);
 
-        const config = {
-          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
-          method: 'get',
-          baseURL: process.env.REACT_APP_SERVER,
-          url: '/books'
-        }
-
-        const response = await axios(config);
-        this.setState({
-          books: response.data
+                const config = {
+                headers: { "Authorization": `Bearer ${jwt}` },
+                method: 'get',
+                baseURL: process.env.REACT_APP_SERVER, //baseURL leads to the server
+                url: '/books'
+            };
+                const response = await axios(config);
+                this.setState({
+                  books: response.data
         })
-      }
-} catch (error) {
-      console.error('Error in BestBooks componentDidMount: ', error);
-      this.setState({
-        errorMessage: `Status Code: ${error.response.status}: ${error.response.data}`
+      } 
+      } catch (error) {
+        console.error('Error in BestBooks componentDidMount: ', error);
+        this.setState({
+          errorMessage: `Status Code: ${error.response.status}: ${error.response.data}`
+
       })
     }
   }
@@ -67,6 +52,17 @@ class BestBooks extends React.Component {
       if (this.props.auth0.isAuthenticated) {
         const res = await this.props.auth0.getIdTokenClaims();
         const jwt = res.__raw;
+
+
+        console.log('token: ', jwt);
+
+      const config = {
+        headers: { "Authorization": `Bearer ${jwt}` },
+        method: 'POST',
+        baseURL: process.env.REACT_APP_SERVER,
+        url: '/books/',
+        data: newBook
+      };
 
         // leave this console here in order to grab your token for backend testing in Thunder Client
         console.log('token: ', jwt);
@@ -88,6 +84,7 @@ class BestBooks extends React.Component {
 
       }
 } catch (error) {
+
       console.error("error in BestBook createBook: ", error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`,
@@ -98,8 +95,14 @@ class BestBooks extends React.Component {
   deleteBook = async (bookToBeDeleted) => {
     try {
       const proceed = window.confirm(`Do you want to delete ${bookToBeDeleted.title}?`);
+      
+      if (proceed && this.props.auth0.isAuthenticated) {
+        const response = await this.props.auth0.getIdTokenClaims();
+        const jwt = response.__raw;
 
+        console.log('token: ', jwt);
 
+// lab15vida added to 118
       let newBookArr = this.state.books.filter((book) => book._id !== bookToBeDeleted._id);
       this.setState({
         books: newBookArr,
@@ -114,53 +117,69 @@ class BestBooks extends React.Component {
           console.log('token: ', jwt);
         const config = {
           headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
+
+   const bookToBeDeleted = await BookFormModal.findOne({_id: Request.params._id, email:requestAnimationFrame.User.email});
+        
+
           method: 'DELETE',
           baseURL: process.env.REACT_APP_SERVER,
           url: `/books/${bookToBeDeleted._id}`
         };
-        await axios(config);
-
-      }
-    } catch (error) {
-      console.error('error in BestBook deleteBook: ', error);
-      this.setState({
-        errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`
-      });
-    }
-  };
-
-  updateBook = async (updatedBook) => {
-    try {
-      if (this.props.auth0.isAuthenticated) {
-        const res = await this.props.auth0.getIdTokenClaims();
-        const jwt = res.__raw;
-
-        // leave this console here in order to grab your token for backend testing in Thunder Client
-        console.log('token: ', jwt);
-        const config = {
-          headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
-          method: 'PUT',
-          baseURL: process.env.REACT_APP_SERVER,
-          url: `/books/${updatedBook._id}`,
-          data: updatedBook
-        };
-        const updatedBookResult = await axios(config);
         
-        let updateBooks = this.state.books.map(book => {
-          if (book._id === updatedBookResult.data._id) {
-            return updatedBookResult.data;
-          } else {
-            return book;
-          }
-        });
-      
+      if (!bookToBeDeleted) response.status(404).send('Unable to find that book to delete');
+      else {
+        let newBookArr = this.state.books.filter((book) => book._id !== bookToBeDeleted._id);
         this.setState({
-          books: updateBooks,
+          books: newBookArr,
           errorMessage: ''
         });
 
+          await axios(config);
+          
+        }
+      } 
+    } catch (error) {
+        console.error('error in BestBook deleteBook: ', error);
+        this.setState({
+          errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`
+        });
       }
-} catch (error) {
+    }
+
+    updateBook = async (updatedBook) => {
+      try {
+        if (this.props.auth0.isAuthenticated) {
+          const res = await this.props.auth0.getIdTokenClaims();
+          const jwt = res.__raw;
+
+          console.log('token: ', jwt);
+        
+          const config = {
+            headers: { "Authorization": `Bearer ${jwt}` },
+            method: 'PUT',
+            baseURL: process.env.REACT_APP_SERVER,
+            url: `/books/${updatedBook._id}`,
+            data: updatedBook
+          };
+
+          const updatedBookResult = await axios(config);
+        
+          let updateBooks = this.state.books.map(book => {
+            if (book._id === updatedBookResult.data._id) {
+              return updatedBookResult.data;
+            } else {
+              return book;
+            }
+          });
+      
+          this.setState({
+            books: updateBooks,
+            errorMessage: ''
+          });
+
+        }
+      } catch (error) {
+
       console.error('error in BestBook updateBook: ', error);
       this.setState({
         errorMessage: `Status Code is ${error.response.status}: ${error.response.data}`
@@ -172,7 +191,6 @@ class BestBooks extends React.Component {
 
   closeFormModal = () => this.setState({ showModal: false });
   selectBookToUpdate = (bookToBeUpdated) => this.setState({ bookToBeUpdated, showModal: true });
-
 
       render() {
         
@@ -188,13 +206,6 @@ class BestBooks extends React.Component {
           updateBook={this.updateBook} />
         }
         <Container>
-
-        {this.props.auth0.isAuthenticated ?
-    <>
-      <Logout />
-      <Profile />
-      
-     
 
           {this.state.books.length ? ( // this is saying IF this.state.books exist, if its more than 0 then give me the carousel.
             <Carousel id="carousel">
@@ -224,12 +235,10 @@ class BestBooks extends React.Component {
           ) : ( // if NOT then give me "no books found"
           <h3 id="no-books">No Books Found :(</h3>
           )}
-          </>
-           : <Login /> }
         </Container>
       </>
     )
-  }
-}
+  };
+};
 
 export default withAuth0(BestBooks);

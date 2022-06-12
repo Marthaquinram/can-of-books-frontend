@@ -3,6 +3,9 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About';
+import Welcome from './Welcome';
+import Profile from './auth/Profile';
+import { withAuth0 } from "@auth0/auth0-react";
 // import CreateBook from './CreateBook';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,13 +43,19 @@ class App extends React.Component {
           <Routes>
             <Route 
               exact path="/"
-              // 03:07 - Conditionally render the `BestBooks` component, if the user is logged in. Otherwise, show the `Welcome` component.
-              element={this.props.auth0.isAuthenticated ? <BestBooks /> : <Welcome />}
+
+              element={this.props.auth0.isAuthenticated? <BestBooks /> : <Welcome />}
             >
+              
             </Route>
             <Route 
               path="/about"
               element={<About />}
+            >
+            </Route>
+             <Route 
+              path="/profile"
+              element={<Profile />}
             >
             </Route>
             <Route>
