@@ -177,7 +177,7 @@ class BestBooks extends React.Component {
         }
         <Container>
 
-          {this.state.books.length ? ( // this is saying IF this.state.books exist, if its more than 0 then give me the carousel.
+          {this.state.books.length > 0 ? ( // this is saying IF this.state.books exist, if its more than 0 then give me the carousel.
             <Carousel id="carousel">
               {this.state.books.map(book => (
                 <Carousel.Item key={book.title} >
