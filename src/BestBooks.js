@@ -5,7 +5,7 @@ import bookImg from './lib.jpeg';
 import axios from 'axios';
 import BookFormModal from './BookFormModal.js';
 import { Container, Button } from 'react-bootstrap';
-import { withAuth0 } from "@auth0/auth0-react";
+import { withAuth0 } from '@auth0/auth0-react';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -91,7 +91,6 @@ class BestBooks extends React.Component {
 
         const config = {
           headers: { "Authorization": `Bearer ${jwt}` }, // new lab 15
-          // const bookToBeDeleted = await BookFormModal.findOne({ _id: Request.params._id, email: requestAnimationFrame.User.email });    // I don't think this belongs here -Vida
           method: 'DELETE',
           baseURL: process.env.REACT_APP_SERVER,
           url: `/books/${bookToBeDeleted._id}`
